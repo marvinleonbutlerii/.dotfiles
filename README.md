@@ -12,12 +12,12 @@ This repository contains personal development environment configuration, managed
 
 ### Key Features
 
-- 🚀 **One-command setup** - Complete development environment in minutes
-- 🤖 **Claude Code Integration** - Global CLAUDE.md and custom skills
-- 📦 **Resilient Package Management** - Continues installation even if packages fail
-- 💾 **Compressed Backups** - Create and restore configuration snapshots
-- 🔍 **Health Monitoring** - Comprehensive environment diagnostics
-- 🛠️ **Modular Design** - Separate work and personal configurations
+- **One-command setup** - Complete development environment in minutes
+- **Claude Code Integration** - Global CLAUDE.md and custom skills
+- **Resilient Package Management** - Continues installation even if packages fail
+- **Compressed Backups** - Create and restore configuration snapshots
+- **Health Monitoring** - Comprehensive environment diagnostics
+- **Modular Design** - Separate work and personal configurations
 
 ## Quick Start
 
