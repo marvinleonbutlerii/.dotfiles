@@ -54,6 +54,14 @@ When debugging or implementing:
 6. **Test Minimally**: Make the smallest possible change to test your hypothesis
 7. **Verify Before Continuing**: Did your test work? If not, form new hypothesis - don't add more fixes
 
+## Context Efficiency (No Capability Loss)
+
+- Prefer targeted searches (`rg`, `Select-String`) before opening large files.
+- Read only the smallest necessary slice (`Get-Content -TotalCount`, `-Tail`, or `Select-String -Context`).
+- Avoid loading full logs or binaries unless explicitly needed for verification.
+- If a file is large, summarize structure first, then read relevant sections.
+- Use file references/attachments over pasting large blocks into chat.
+
 ## Environment Context
 
 - **Operating System**: Windows 11
@@ -72,6 +80,7 @@ When debugging or implementing:
   - Environment: `$env:PATH` not `$PATH`
   - Commands: `Get-ChildItem` not `ls` (though aliases exist)
   - Pipes work differently with objects, not text
+- For tool commands, always use PowerShell. If the tool shell isn't PowerShell, wrap commands with `pwsh -NoProfile -Command "..."`.
 - Administrator privileges may be needed for:
   - Creating symlinks (unless Developer Mode is enabled)
   - Modifying system PATH
