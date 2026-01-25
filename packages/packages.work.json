@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotfiles/schema/main/packages.schema.json",
+  "description": "Work-specific packages",
+  "updated": "2026-01-24",
+  "winget": [
+    "Docker.DockerDesktop",
+    "Kubernetes.kubectl",
+    "Microsoft.Azure.AzCli",
+    "Amazon.AWSCLI",
+    "Postman.Postman",
+    "dbeaver.dbeaver",
+    "Notion.Notion",
+    "SlackTechnologies.Slack",
+    "Zoom.Zoom",
+    "1Password.1Password",
+    "Obsidian.Obsidian",
+    "Figma.Figma"
+  ],
+  "notes": {
+    "Docker.DockerDesktop": "Container runtime",
+    "Kubernetes.kubectl": "Kubernetes CLI",
+    "Microsoft.Azure.AzCli": "Azure CLI",
+    "Amazon.AWSCLI": "AWS CLI v2",
+    "Postman.Postman": "API testing",
+    "dbeaver.dbeaver": "Database management",
+    "Notion.Notion": "Notes and docs",
+    "SlackTechnologies.Slack": "Team communication",
+    "Zoom.Zoom": "Video calls",
+    "1Password.1Password": "Password manager",
+    "Obsidian.Obsidian": "Markdown notes",
+    "Figma.Figma": "Design tool"
+  }
+}

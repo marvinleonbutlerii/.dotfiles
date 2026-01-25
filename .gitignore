@@ -1,0 +1,7 @@
+# Dotfiles repo ignore rules
+backups/
+*.backup
+*.zip
+failed_packages_*.txt
+.DS_Store
+Thumbs.db
