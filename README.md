@@ -115,11 +115,11 @@ dot doctor
 ```
 
 Comprehensive diagnostics including:
-- ✅ System information
-- ✅ Required tools (git, claude, code)
-- ✅ Claude Code configuration
-- ✅ Symlink status
-- ✅ PATH configuration
+- System information
+- Required tools (git, claude, code)
+- Claude Code configuration
+- Symlink status
+- PATH configuration
 
 #### `dot stow` / `dot unstow` - Symlink Management
 
@@ -367,4 +367,4 @@ Personal use. Fork and adapt for your own needs.
 
 ---
 
-*This codebase will outlive you. Make it count.*
+*This codebase will outlive you.*
