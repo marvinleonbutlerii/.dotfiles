@@ -354,10 +354,6 @@ dot doctor
 dot restore pre-changes
 ```
 
-## License
-
-Personal use. Fork and adapt for your own needs.
-
 ## Acknowledgments
 
 - [dmmulroy/.dotfiles](https://github.com/dmmulroy/.dotfiles) - Inspiration
