@@ -360,11 +360,11 @@ Personal use. Fork and adapt for your own needs.
 
 ## Acknowledgments
 
-- [dmmulroy/.dotfiles](https://github.com/dmmulroy/.dotfiles) - Inspiration and philosophy
-- [Anthropic Claude](https://www.anthropic.com) - AI assistance
-- [chezmoi](https://www.chezmoi.io/) - Dotfiles management concepts
+- [dmmulroy/.dotfiles](https://github.com/dmmulroy/.dotfiles) - Inspiration
+- [Anthropic Claude](https://www.anthropic.com/) - Start
+- [Anthropic Claude](https://openai.com/codex/) - Binding
+- [chezmoi](https://www.chezmoi.io/) - Dotfiles
 - The dotfiles community for patterns and best practices
 
 ---
 
-*This codebase will outlive you.*
