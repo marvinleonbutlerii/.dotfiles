@@ -9,7 +9,7 @@ A Windows dotfiles system with deep Claude Code integration. One command sets up
 #    Settings > Privacy & Security > For Developers > Developer Mode: ON
 
 # 2. Clone
-git clone https://github.com/YOUR_USERNAME/dotfiles.git $env:USERPROFILE\.dotfiles
+git clone https://github.com/marvinleonbutlerii/.dotfiles.git $env:USERPROFILE\.dotfiles
 
 # 3. Configure git identity
 notepad $env:USERPROFILE\.dotfiles\home\.config\git\config

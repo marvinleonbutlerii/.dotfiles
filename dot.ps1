@@ -195,8 +195,30 @@ function Install-Symlinks {
         }
     }
     
+    # Clean up orphan symlinks (point into dotfiles source but target no longer exists)
+    $orphans = 0
+    $managedDirs = Get-ChildItem -Path $sourceHome -Directory -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
+        Join-Path $HomeDir (Get-RelativePath -Path $_.FullName -BasePath $sourceHome)
+    }
+    # Include the root home mapping too
+    $managedDirs = @($HomeDir) + @($managedDirs)
+
+    foreach ($dir in $managedDirs) {
+        if (-not (Test-Path $dir)) { continue }
+        Get-ChildItem -Path $dir -File -Force -ErrorAction SilentlyContinue | Where-Object {
+            $_.LinkType -eq 'SymbolicLink' -and $_.Target -like "$sourceHome*" -and -not (Test-Path $_.Target)
+        } | ForEach-Object {
+            $relativePath = Get-RelativePath -Path $_.FullName -BasePath $HomeDir
+            Remove-Item $_.FullName -Force
+            Write-Status "Removed orphan: $relativePath" -Type Warning
+            $orphans++
+        }
+    }
+
     Write-Host ""
-    Write-Status "Symlinks: $created created, $skipped skipped, $failed failed" -Type Info
+    $summary = "Symlinks: $created created, $skipped skipped, $failed failed"
+    if ($orphans -gt 0) { $summary += ", $orphans orphans removed" }
+    Write-Status $summary -Type Info
     return ($failed -eq 0)
 }
 
