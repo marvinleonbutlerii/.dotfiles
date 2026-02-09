@@ -37,6 +37,12 @@ Available commands:
 ├── dot.cmd           # Batch wrapper
 ├── home/             # Files to symlink to ~
 │   ├── .claude/      # Claude Code config
+│   │   ├── CLAUDE.md       # Global instructions
+│   │   ├── settings.json   # Claude Code settings
+│   │   ├── agents/         # Custom subagents (researcher, builder, planner)
+│   │   ├── rules/          # Operational mandates (7 files)
+│   │   ├── skills/         # Domain protocols (9 skills)
+│   │   └── commands/       # Slash commands (dot.md)
 │   └── .config/      # XDG-style config
 ├── packages/         # Package manifests (JSON)
 ├── backups/          # Backup archives

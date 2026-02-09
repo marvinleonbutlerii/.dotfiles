@@ -1,186 +1,63 @@
 ---
 name: planning
 description: |
-  Structured planning for complex tasks, features, or projects. Use when
-  facing a large or ambiguous task that needs to be broken down into
-  manageable steps with clear success criteria.
+  Structured planning for complex tasks, features, or projects. Activates
+  when a task requires decomposition, has multiple components, or when
+  requirements need clarification before implementation.
 ---
 
 # Planning Skill
 
-## When to Use
+## Core Principle
 
-Engage this skill when:
-- Task requires more than 30 minutes of work
-- Multiple components or systems are involved
-- Requirements are unclear or ambiguous
-- Risk of going down wrong path is significant
-- Coordination with user decisions is needed
+Planning is root-cause analysis applied to the future. Before planning how to build, understand what the deepest foundational requirement actually is.
 
 ## Planning Framework
 
-### Phase 1: Clarify
+### Phase 0: Root Requirement
 
-Before ANY planning, ensure you understand:
+Before any planning, identify the deepest foundational requirement:
+- What is the user actually trying to achieve at the most fundamental level?
+- What is the root problem beneath the surface request?
+- What would a complete, foundational solution look like?
 
-```markdown
-## Understanding Check
+### Phase 1: Research
 
-**Goal**: What is the desired end state?
-**Problem**: What problem does this solve?
-**Constraints**: What limitations exist?
-**Success Criteria**: How do we know it's done?
-**Non-Goals**: What are we explicitly NOT doing?
-```
+Before planning implementation — research is mandatory, not optional:
+- Research current best practices for this type of work using Tier 1 and Tier 2 sources
+- Find reference implementations and prior art on GitHub, in community discourse
+- Identify what is known vs. what needs to be discovered
+- Use WebSearch for anything that could be verified externally
 
-If any of these are unclear, STOP and ask.
+### Phase 2: Clarify
 
-### Phase 2: Explore
+Ensure you understand:
+- **Goal**: What is the desired end state?
+- **Problem**: What root problem does this solve?
+- **Constraints**: What limitations exist?
+- **Success Criteria**: How do we know it is done?
+- **Non-Goals**: What are we explicitly NOT doing?
 
-Investigate the problem space:
+Clarify ALL unknowns before proceeding. Do not infer when you can verify.
 
-```markdown
-## Exploration
+### Phase 3: Explore
 
-**Current State**
-- What exists today?
-- What works/doesn't work?
-- What dependencies exist?
+Investigate options where multiple approaches exist:
+- Current state and what exists today
+- Options with pros, cons, and effort estimates
+- Recommendation with reasoning
 
-**Options Considered**
-1. Option A: [description]
-   - Pros: [list]
-   - Cons: [list]
-   - Effort: [estimate]
-
-2. Option B: [description]
-   - Pros: [list]
-   - Cons: [list]
-   - Effort: [estimate]
-
-**Recommendation**
-[Which option and why]
-```
-
-### Phase 3: Decompose
+### Phase 4: Decompose
 
 Break down into atomic tasks:
+- **P0 (Must Have)**: Core requirements
+- **P1 (Should Have)**: Important improvements
+- **P2 (Nice to Have)**: Optional enhancements
+- Dependencies between tasks
 
-```markdown
-## Task Breakdown
+### Phase 5: Sequence
 
-### Must Have (P0)
-- [ ] Task 1: [specific, actionable]
-- [ ] Task 2: [specific, actionable]
-
-### Should Have (P1)
-- [ ] Task 3: [specific, actionable]
-
-### Nice to Have (P2)
-- [ ] Task 4: [specific, actionable]
-
-### Dependencies
-- Task 2 depends on Task 1
-- Task 4 can be done in parallel
-```
-
-### Phase 4: Sequence
-
-Order the work:
-
-```markdown
-## Execution Plan
-
-### Step 1: [Name]
-- Task: [what to do]
-- Verify: [how to confirm it worked]
-- Rollback: [how to undo if needed]
-
-### Step 2: [Name]
-...
-
-### Checkpoints
-- After Step 2: Review with user
-- After Step 4: Test integration
-```
-
-## Planning Principles
-
-### 1. Start Small
-- Begin with minimal viable approach
-- Add complexity only when needed
-- Prefer reversible decisions
-
-### 2. Verify Often
-- Each step should be verifiable
-- Don't batch too many changes
-- Test assumptions early
-
-### 3. Plan for Failure
-- What could go wrong?
-- How would we detect it?
-- How would we recover?
-
-### 4. Time-box Exploration
-- Don't research forever
-- Set a limit, then decide
-- Perfect information doesn't exist
-
-## Red Flags
-
-Stop and reassess if:
-- Plan has more than 10 steps
-- Any step takes more than 1 hour
-- Dependencies form a complex graph
-- Success criteria are vague
-- Rollback isn't possible
-
-## Output Format
-
-Present plans as:
-
-```markdown
-# Plan: [Feature/Task Name]
-
-## Summary
-[1-2 sentence overview]
-
-## Goal
-[What success looks like]
-
-## Approach
-[High-level strategy]
-
-## Steps
-1. [Step 1] - [time estimate]
-2. [Step 2] - [time estimate]
-...
-
-## Risks
-- [Risk 1]: [Mitigation]
-- [Risk 2]: [Mitigation]
-
-## Questions for User
-1. [Question needing decision]
-2. [Question needing clarification]
-
-## Ready to proceed?
-[Wait for confirmation before starting]
-```
-
-## Anti-Patterns
-
-**Over-planning**
-- Analysis paralysis
-- Planning work that may never happen
-- Premature optimization of the plan
-
-**Under-planning**
-- Starting without understanding goal
-- No verification points
-- No rollback strategy
-
-**Rigid plans**
-- Not adapting to new information
-- Following plan when clearly wrong
-- Ignoring user feedback
+Order the work with verification at each step:
+- Each step: what to do, how to verify, how to rollback
+- Checkpoints for integration testing
+- Recurrence guards for each completed phase

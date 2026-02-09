@@ -1,29 +1,59 @@
-{
-  "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "autoUpdatesChannel": "latest",
-  "theme": "dark",
-  "preferredNotifChannel": "terminal",
-  "verbose": false,
-  "env": {
-    "SHELL": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
-    "COMSPEC": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
-  },
-  "permissions": {
-    "allow": [
-      "Read(**)",
-      "Write(~/.dotfiles/**)",
-      "Write(~/.config/**)",
-      "Write(~/.claude/**)",
-      "Bash(pwsh*)"
-    ],
-    "deny": [
-      "Bash(rm:-rf /)",
-      "Bash(rm:-rf ~)",
-      "Bash(format:*)",
-      "Bash(del:/s)",
-      "Bash(shutdown:*)",
-      "Bash(reboot:*)"
-    ]
-  },
-  "mcpServers": {}
+﻿{
+    "$schema":  "https://json.schemastore.org/claude-code-settings.json",
+    "autoUpdatesChannel":  "latest",
+    "theme":  "dark",
+    "preferredNotifChannel":  "terminal",
+    "verbose":  false,
+    "env":  {
+                "SHELL":  "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+                "COMSPEC":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE":  "70",
+                "DISABLE_NON_ESSENTIAL_MODEL_CALLS":  "1",
+                "CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD":  "1"
+            },
+    "permissions":  {
+                        "defaultMode":  "plan",
+                        "allow":  [
+                                      "Read(**)",
+                                      "Edit(**)",
+                                      "Write(**)",
+                                      "Bash(*)",
+                                      "Grep(*)",
+                                      "Glob(*)",
+                                      "WebSearch",
+                                      "WebFetch(*)",
+                                      "Task(*)",
+                                      "TodoWrite",
+                                      "Skill(*)",
+                                      "NotebookEdit(*)",
+                                      "mcp__Windows-MCP__Shell",
+                                      "mcp__Windows-MCP__Snapshot",
+                                      "mcp__Windows-MCP__Click",
+                                      "mcp__Windows-MCP__Type",
+                                      "mcp__Windows-MCP__Scroll",
+                                      "mcp__Windows-MCP__Move",
+                                      "mcp__Windows-MCP__Shortcut",
+                                      "mcp__Windows-MCP__Wait",
+                                      "mcp__Windows-MCP__Scrape",
+                                      "mcp__Windows-MCP__App",
+                                      "mcp__Windows-MCP__MultiSelect",
+                                      "mcp__Windows-MCP__MultiEdit"
+                                  ],
+                        "deny":  [
+                                     "Bash(rm:-rf /)",
+                                     "Bash(rm:-rf ~)",
+                                     "Bash(format:*)",
+                                     "Bash(del:/s)",
+                                     "Bash(shutdown:*)",
+                                     "Bash(reboot:*)"
+                                 ],
+                        "additionalDirectories":  [
+                                                      "~/.dotfiles/home/.claude"
+                                                  ]
+                    },
+    "mcpServers":  {
+
+                   },
+    "effortLevel":  "high",
+    "spinnerTipsEnabled":  false
 }

@@ -1,240 +1,85 @@
----
+﻿---
 name: refactoring
 description: |
   Systematic code refactoring to improve design without changing behavior.
-  Use when code needs restructuring, simplification, or improvement while
-  maintaining all existing functionality and tests.
+  Activates when code structure needs improvement without behavior change,
+  including during the refactor phase of TDD cycles.
 ---
 
 # Refactoring Skill
 
 ## Core Principle
 
-**Refactoring changes structure, not behavior.**
+Refactoring targets the structural mechanism that generates code smells, not individual smell instances. If you find the same smell in multiple places, the fix is to change the pattern that produces them, not to fix each instance independently.
 
-If tests fail after refactoring, you broke something. Revert and try smaller steps.
+## Prerequisites
 
-## When to Refactor
-
-**Good times:**
-- Tests are green and comprehensive
-- You understand the code well
-- There's a clear improvement goal
-- After completing a feature (in TDD refactor phase)
-
-**Bad times:**
+Do NOT refactor when:
 - Tests are failing or missing
-- Under time pressure
-- You don't understand the code
+- You do not understand the code
 - While adding new features simultaneously
 
-## The Refactoring Process
+## Refactoring Protocol
 
-### Step 0: Prerequisites
+### Step 0: Research
 
-Before starting:
+Before refactoring â€” research is mandatory:
+- Research the canonical pattern or design for this type of code using Tier 1 and Tier 2 sources
+- Compare the current implementation against reference implementations
+- Understand why the current design exists before changing it
 
-```
-[ ] All tests pass
-[ ] Test coverage is adequate
-[ ] You understand what the code does
-[ ] You have a specific improvement goal
-[ ] Changes are version controlled
-```
+### Step 1: Verify Readiness
 
-### Step 1: Identify the Smell
+- All tests pass
+- Test coverage is adequate for the area being changed
+- You understand what the code does and why
+- You have a specific improvement goal
+- Changes are version controlled
 
-Common code smells to address:
+### Step 2: Identify the Smell
 
-**Bloaters**
-- Long Method (>20 lines)
-- Large Class (>300 lines)
-- Long Parameter List (>3 params)
-- Primitive Obsession
-- Data Clumps
+Common code smells grouped by the mechanism that generates them:
 
-**Object-Orientation Abusers**
-- Switch Statements
-- Refused Bequest
-- Temporary Field
+**Bloaters** (code grew without structural discipline):
+- Long Method (>20 lines), Large Class (>300 lines)
+- Long Parameter List (>3 params), Data Clumps
 
-**Change Preventers**
-- Divergent Change
-- Shotgun Surgery
-- Parallel Inheritance
+**Change Preventers** (coupling prevents isolated changes):
+- Divergent Change, Shotgun Surgery, Parallel Inheritance
 
-**Dispensables**
-- Comments (explaining bad code)
-- Duplicate Code
-- Dead Code
-- Speculative Generality
+**Dispensables** (things that should not exist):
+- Duplicate Code, Dead Code, Speculative Generality
 
-**Couplers**
-- Feature Envy
-- Inappropriate Intimacy
-- Message Chains
-- Middle Man
+**Couplers** (inappropriate dependencies):
+- Feature Envy, Inappropriate Intimacy, Message Chains
 
-### Step 2: Choose the Refactoring
+### Step 3: Choose the Refactoring
 
 Select the smallest refactoring that improves the smell:
 
-**Extract/Inline**
-- Extract Method
-- Extract Variable
-- Extract Class
-- Inline Method
-- Inline Variable
+- **Extract/Inline**: Method, Variable, Class
+- **Rename**: Variable, Method, Class
+- **Move**: Method, Field, Statements
+- **Organize Data**: Replace Primitive with Object, Introduce Parameter Object
+- **Simplify Conditionals**: Decompose, Consolidate, Replace with Polymorphism
+- **Simplify Method Calls**: Add/Remove Parameter, Separate Query from Modifier
 
-**Rename**
-- Rename Variable
-- Rename Method
-- Rename Class
+### Step 4: Execute Mechanically
 
-**Move**
-- Move Method
-- Move Field
-- Move Statements
-
-**Organize Data**
-- Replace Primitive with Object
-- Replace Array with Object
-- Introduce Parameter Object
-
-**Simplify Conditionals**
-- Decompose Conditional
-- Consolidate Conditional
-- Replace Conditional with Polymorphism
-- Remove Control Flag
-
-**Simplify Method Calls**
-- Rename Method
-- Add Parameter
-- Remove Parameter
-- Separate Query from Modifier
-
-### Step 3: Execute Mechanically
-
-Apply the refactoring as a mechanical transformation:
-
-```
-1. Make the structural change
+1. Make one structural change
 2. Run tests immediately
-3. If tests fail: REVERT
-4. If tests pass: COMMIT
+3. If tests fail: REVERT. If the failure reveals a pre-existing latent bug (not caused by the refactoring), invoke the debugging protocol before continuing the refactoring cycle.
+4. If tests pass: continue
 5. Repeat with next small change
-```
 
-**Critical:** One refactoring at a time. Do not batch.
+One refactoring at a time. Do not batch.
 
-### Step 4: Verify
+### Step 5: Verify
 
 After each refactoring:
+- All tests still pass
+- Behavior is unchanged
+- Code is measurably better
+- No new warnings or errors
+- Add a recurrence guard to prevent the smell from being reintroduced
 
-```
-[ ] All tests still pass
-[ ] Behavior is unchanged
-[ ] Code is measurably better
-[ ] No new warnings/errors
-```
-
-## Refactoring Recipes
-
-### Extract Method
-
-When: Long method, code with comment explaining it
-
-```
-Before:
-function process() {
-    // validate input
-    if (!data) throw new Error('missing');
-    if (data.length > 100) throw new Error('too long');
-    
-    // transform
-    const result = data.map(x => x * 2);
-    
-    // save
-    db.save(result);
-}
-
-After:
-function process() {
-    validate(data);
-    const result = transform(data);
-    save(result);
-}
-
-function validate(data) { ... }
-function transform(data) { ... }
-function save(result) { ... }
-```
-
-### Rename for Clarity
-
-When: Name doesn't describe purpose
-
-```
-Before:
-const d = new Date();
-const x = calculate(d);
-
-After:
-const orderDate = new Date();
-const totalPrice = calculateOrderTotal(orderDate);
-```
-
-### Replace Conditional with Polymorphism
-
-When: Switch statement selecting behavior by type
-
-```
-Before:
-function getArea(shape) {
-    switch (shape.type) {
-        case 'circle': return Math.PI * shape.r ** 2;
-        case 'square': return shape.side ** 2;
-    }
-}
-
-After:
-class Circle { getArea() { return Math.PI * this.r ** 2; } }
-class Square { getArea() { return this.side ** 2; } }
-```
-
-## Red Flags
-
-Stop refactoring if:
-
-- Tests start failing
-- You're not sure what the code does
-- Changes are getting larger, not smaller
-- You're "improving" code you don't need to touch
-- You're mixing refactoring with feature work
-
-## Output Format
-
-When refactoring, report as:
-
-```markdown
-## Refactoring: [Description]
-
-### Target
-[What code is being refactored]
-
-### Smell
-[What problem we're addressing]
-
-### Steps Taken
-1. [Refactoring 1] ✅
-2. [Refactoring 2] ✅
-...
-
-### Before/After
-[Show meaningful comparison]
-
-### Verification
-- Tests: All passing
-- Behavior: Unchanged
-- Improvement: [What's better now]
-```

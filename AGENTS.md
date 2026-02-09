@@ -11,6 +11,12 @@
 ├── dot.cmd           # Batch wrapper for cmd.exe
 ├── home/             # Symlinked to ~/
 │   ├── .claude/      # Claude Code config
+│   │   ├── CLAUDE.md       # Global instructions
+│   │   ├── settings.json   # Claude Code settings
+│   │   ├── agents/         # Custom subagents (researcher, builder, planner)
+│   │   ├── rules/          # Operational mandates (7 files)
+│   │   ├── skills/         # Domain protocols (9 skills)
+│   │   └── commands/       # Slash commands (dot.md)
 │   ├── .config/      # XDG-style config
 │   │   ├── git/      # Git config/ignore
 │   │   ├── jj/       # Jujutsu config + hooks

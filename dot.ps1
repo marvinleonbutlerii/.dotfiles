@@ -160,8 +160,22 @@ function Install-Symlinks {
                     continue
                 }
             }
-            
-            if ($Force) {
+
+            # Plain file with identical content — safe to replace with symlink
+            if (-not $existing.LinkType) {
+                $sourceHash = (Get-FileHash $file.FullName).Hash
+                $targetHash = (Get-FileHash $targetPath).Hash
+                if ($sourceHash -eq $targetHash) {
+                    Remove-Item $targetPath -Force
+                    Write-Status "Replacing identical copy with symlink: $relativePath" -Type Info
+                } elseif ($Force) {
+                    Remove-Item $targetPath -Force
+                } else {
+                    Write-Status "Conflict (different content): $relativePath" -Type Warning
+                    $skipped++
+                    continue
+                }
+            } elseif ($Force) {
                 Remove-Item $targetPath -Force
             } else {
                 Write-Status "Skipping (exists): $relativePath" -Type Warning

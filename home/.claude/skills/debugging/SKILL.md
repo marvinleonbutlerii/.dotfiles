@@ -1,57 +1,76 @@
 ---
 name: debugging
 description: |
-  Systematic debugging approach for any type of issue. Use when something
-  is broken, behaving unexpectedly, or producing errors. Emphasizes
-  hypothesis-driven investigation over random changes.
+  Systematic debugging for any type of issue. Activates when any error,
+  failure, or unexpected behavior is encountered during any task.
+  Root-cause investigation at the deepest architectural level.
+  Never symptom-by-symptom patching.
 ---
 
 # Debugging Skill
 
 ## Core Principle
 
-**One hypothesis at a time, smallest possible change, verify before continuing.**
-
-Never "try a bunch of things and see what works." Each debugging step should:
-1. Test a single hypothesis
-2. Make the minimal change needed
-3. Provide clear pass/fail signal
+Find the generative mechanism, not the individual symptoms. Before solving any single error, examine the full error landscape to identify the deepest root cause that generates multiple symptoms.
 
 ## Debugging Protocol
+
+### Phase 0: Landscape Assessment
+
+This phase is NOT optional. It must complete before ANY individual error is touched.
+
+1. **Survey all errors/symptoms** — list every failure, warning, and unexpected behavior
+2. **Read the code holistically** — understand the architecture, not just the error site
+3. **Identify patterns** — are multiple errors originating from the same root?
+4. **Find the deepest origin** — where in the architecture does the problem first manifest?
+5. **Decide: per-error fix or systemic refactor?** — if the same mistake appears in multiple places, the fix is a refactor, not per-error patching
 
 ### Phase 1: Reproduce
 
 Before anything else, establish a reliable reproduction:
 
-```
-[ ] Can reproduce the issue consistently
-[ ] Have a minimal reproduction case
-[ ] Know the exact steps to trigger it
-[ ] Have captured the exact error message/behavior
-```
+- Can reproduce the issue consistently
+- Have a minimal reproduction case
+- Know the exact steps to trigger it
+- Have captured the exact error message/behavior
 
-If you cannot reproduce, debugging is premature. Focus on reproduction first.
+If you cannot reproduce, focus on reproduction first.
 
 ### Phase 2: Isolate
 
 Narrow down the problem space:
 
 1. **When did it last work?** Check recent changes
-2. **What's different?** Environment, dependencies, data, timing
+2. **What is different?** Environment, dependencies, data, timing
 3. **Where does it fail?** Add logging/breakpoints to pinpoint location
 4. **What type of failure?** Crash, wrong result, timeout, etc.
 
-### Phase 3: Hypothesize
+### Phase 2.5: Pattern Scan
 
-Form a single, specific hypothesis:
+After isolating the root cause location:
 
-- BAD: "Something's wrong with the database"
-- GOOD: "The query is returning NULL because the user_id foreign key constraint is failing"
+1. **Search the entire codebase** for the same pattern or mistake
+2. **If found elsewhere**, the fix must be systemic, not local
+3. **Map all instances** before fixing any single one
+4. **Design a fix that addresses all instances** from the same root
+
+### Phase 3: Research and Hypothesize
+
+Before forming a hypothesis, research whether this error pattern is a known issue:
+- Search GitHub issues for the library/framework involved
+- Search Stack Overflow for the exact error message
+- Check community discourse for practitioners who hit the same problem
+
+Then form a single, specific hypothesis:
+
+- BAD: "Something is wrong with the database"
+- GOOD: "The query returns NULL because the user_id foreign key constraint fails on soft-deleted records"
 
 A good hypothesis is:
 - Specific enough to test
 - Falsifiable (can be proven wrong)
 - Based on evidence, not guessing
+- Targeted at the mechanism layer, not the symptom layer
 
 ### Phase 4: Test
 
@@ -66,63 +85,14 @@ Make the change. Observe the result. Do NOT make additional changes.
 
 ### Phase 5: Evaluate
 
-Did the test pass or fail?
-
 **If hypothesis confirmed:**
-- Fix verified, document and commit
-- If partial fix, repeat from Phase 3 for remaining issue
+- Fix verified. Document the root cause.
+- Scan the entire codebase for the same class of mistake. This is mandatory.
+- Add a recurrence guard (test, assertion, linter rule).
+- If partial fix, repeat from Phase 3 for remaining issue.
 
 **If hypothesis refuted:**
-- Revert your change
+- Revert your change.
 - What did you learn?
-- Form new hypothesis based on new information
-- Return to Phase 3
-
-### Common Debugging Mistakes
-
-1. **Changing multiple things at once** - Impossible to know what worked
-2. **Not reverting failed attempts** - Accumulating cruft obscures the real issue
-3. **Fixing symptoms not causes** - Issue will return in different form
-4. **Assuming you know the cause** - Let evidence guide you
-5. **Giving up too early** - Systematic approach always finds the bug
-
-## Debugging Questions to Ask
-
-- What changed recently?
-- What are the exact inputs?
-- What is the exact error (full text)?
-- What did you expect to happen?
-- What actually happened?
-- Is it environment-specific?
-- Is it data-specific?
-- Is it timing-specific?
-- What have you already tried?
-
-## Output Format
-
-When reporting debugging findings:
-
-```markdown
-## Issue
-[One sentence description]
-
-## Reproduction
-[Exact steps to reproduce]
-
-## Investigation
-1. [Hypothesis 1]: [Result]
-2. [Hypothesis 2]: [Result]
-...
-
-## Root Cause
-[What actually caused the issue]
-
-## Fix
-[What change resolves it]
-
-## Verification
-[How we confirmed it's fixed]
-
-## Prevention
-[How to prevent this in the future]
-```
+- Form new hypothesis based on new information.
+- Return to Phase 3.
