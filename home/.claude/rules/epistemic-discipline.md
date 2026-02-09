@@ -28,7 +28,13 @@ Research runs at the start of every turn that involves any substantive task. The
 - Any task involving a factual claim, technical decision, or implementation pattern
 - Any task requiring domain knowledge
 - Any task where the output could be verified or refuted by external evidence
-- The only exclusion is purely mechanical file manipulation with zero knowledge component (rename a variable, move a file, format code)
+
+**Mechanical task test (research skips ONLY when ALL three are true):**
+1. The exact change is fully specified by the user (no decisions needed)
+2. No API, library, pattern, or tool selection is involved
+3. The correctness of the change can be verified by syntax alone
+
+If ANY answer is NO, the task is substantive and research fires. Examples of mechanical: rename a variable to a user-specified name, move a file to a user-specified path, apply a formatter with existing config.
 
 **When prior research can be reused:**
 - The prior research was performed in the current session
