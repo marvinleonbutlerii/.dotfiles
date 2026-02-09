@@ -1,8 +1,29 @@
-# Dotfiles
+# .dotfiles
 
-A Windows dotfiles system with deep Claude Code integration. One command sets up your entire development environment, including a modular AI agent configuration with custom rules, skills, and subagents.
+My Windows dev environment. One command installs everything, symlinks all configs, and sets up Claude Code with a custom agent framework that actually makes it useful.
 
-## Quick Start
+## Why this exists
+
+Claude Code's default agents are amnesiacs. When Claude spawns a subagent (Explore, Plan, general-purpose), that subagent gets *nothing*. No CLAUDE.md. No rules. No skills. It starts from a blank prompt every time. So all the effort you put into configuring Claude's behavior? Gone the moment it delegates work.
+
+I fixed that. This repo includes three custom agents that replace the built-ins and carry the full config with them — rules, skills, everything. The subagents work the same way the main agent does. That's the whole point.
+
+It also sets up my full Windows dev environment in one command (`dot init` — packages, symlinks, SSH keys, fonts, PATH, the works), but the Claude Code config is the reason you're here.
+
+## What's in the box
+
+**Dev environment:** PowerShell profile with aliases, starship prompt, git with delta diffs and conditional work identity, Neovim (Lua-based, 80+ plugin configs, LSP, Telescope, Treesitter, Harpoon), Windows Terminal, ripgrep, Jujutsu, and about 19 packages installed via winget. Everything lives in `home/` and gets symlinked to `~`.
+
+**Claude Code config:** This is the part I spent the most time on. It's a layered system:
+
+- **CLAUDE.md** gives the agent an identity and a set of operating principles. Mine is configured to research before acting, never present training data as knowledge, and find a better path when the requested one has problems. You'd change this to match how you want Claude to work.
+- **Rules** (7 files) are hard constraints. Things like "always do root-cause analysis, never chase symptoms" and "survey existing solutions before building from scratch." Each rule covers one concept and lives in one file.
+- **Skills** (9) are domain protocols that activate based on what you're doing. When Claude hits a bug, the debugging skill kicks in and enforces a specific investigation protocol instead of letting it guess-and-check. When it needs to research something, the research skill forces it through source evaluation and claim labeling. TDD, code review, planning, refactoring — each one has a defined workflow.
+- **Agents** (3) are the custom subagents. Researcher replaces Explore, builder replaces general-purpose, planner replaces Plan. They embed the rules inline and load skills via frontmatter so the full framework propagates to every subprocess.
+
+The difference is real. Without this, Claude guesses at answers, skips research, chases error messages one by one, and forgets everything when it spawns a subagent. With it, Claude looks things up before answering, tells you when it's unsure, fixes root causes instead of symptoms, and the subagents behave the same way.
+
+## Quick start
 
 ```powershell
 # 1. Enable Developer Mode (required for symlinks)
@@ -11,252 +32,100 @@ A Windows dotfiles system with deep Claude Code integration. One command sets up
 # 2. Clone
 git clone https://github.com/marvinleonbutlerii/.dotfiles.git $env:USERPROFILE\.dotfiles
 
-# 3. Configure git identity
+# 3. Set your git identity
 notepad $env:USERPROFILE\.dotfiles\home\.config\git\config
-# Add your name and email under [user]
 
-# 4. Initialize everything
+# 4. Run init
 cd $env:USERPROFILE\.dotfiles
 .\dot.ps1 init
 
 # 5. Restart your terminal
 ```
 
-That's it. `dot init` handles packages, symlinks, SSH keys, fonts, Claude Code setup, PATH configuration, and runs a health check.
+`dot init` handles packages, symlinks, SSH keys, fonts, Claude Code setup, PATH, and a health check. After restart, `dot` is available globally.
 
-After restart, the `dot` command is available globally.
+## CLI
 
-## What You Get
+```powershell
+# Setup
+dot init                       # Full setup
+dot init --skip-packages       # Skip package installation
+dot init --skip-ssh            # Skip SSH key generation
 
-### Development Environment
+# Day-to-day
+dot update                     # Pull, re-stow, upgrade packages
+dot doctor                     # Health check
+dot stow                      # Create/update symlinks
+dot stow --force               # Overwrite conflicts
+dot edit                       # Open dotfiles in $EDITOR
+dot backup                     # Snapshot before you break something
+dot restore my-snapshot        # Undo the breakage
 
-- **PowerShell** profile with aliases and starship prompt
-- **Git** config with delta diff viewer and conditional work identity
-- **Neovim** (Lua-based) with LSP, Telescope, Treesitter, Harpoon
-- **Windows Terminal** profiles and color schemes
-- **ripgrep**, **starship**, **IdeaVim** configs
-- **Jujutsu** (jj) version control config
+# Packages
+dot package list               # What's installed vs. what should be
+dot package add Git.Git        # Add to manifest and install
+dot package remove Git.Git     # Remove from manifest
+dot package update             # Upgrade everything
+dot retry-failed               # Retry failed installs
+```
 
-### Claude Code Configuration
-
-A modular agent framework that gets symlinked to `~/.claude/`:
-
-| Layer | Purpose | Location |
-|-------|---------|----------|
-| **CLAUDE.md** | Identity, epistemological framework, execution model | `home/.claude/CLAUDE.md` |
-| **Rules** (7) | Operational mandates — one concept per file | `home/.claude/rules/` |
-| **Skills** (9) | Domain protocols with principle-level activation | `home/.claude/skills/` |
-| **Agents** (3) | Custom subagents that carry the full framework | `home/.claude/agents/` |
-| **Commands** (1) | Slash command for dotfiles management | `home/.claude/commands/` |
-
-#### Rules
-
-| File | What it governs |
-|------|-----------------|
-| `epistemic-discipline.md` | Research mandate, claim labeling |
-| `source-hierarchy.md` | Source ranking and quality rubric |
-| `execution-autonomy.md` | Autonomous execution, research-then-act |
-| `root-cause.md` | Root cause analysis, never error-chase |
-| `prior-art.md` | Survey before building |
-| `learning-notes.md` | Post-completion documentation |
-| `tool-mitigations.md` | Known tool failures and workarounds |
-
-#### Skills
-
-| Skill | Activation |
-|-------|------------|
-| `research` | Any task requiring factual verification or technical investigation |
-| `code-review` | Evaluating code changes for correctness, security, standards |
-| `debugging` | Systematic root-cause debugging for any failure |
-| `planning` | Structured decomposition of complex tasks |
-| `tdd` | Test-Driven Development: Red-Green-Refactor |
-| `refactoring` | Improving code structure without changing behavior |
-| `project-init` | Bootstrapping new projects |
-| `session-guard` | Detecting scope creep and generating handoff prompts |
-| `skill-sweep` | Auto-routing to the right skill for any task |
-
-#### Agents
-
-| Agent | Replaces | Purpose |
-|-------|----------|---------|
-| `researcher` | Explore | Deep research with epistemic discipline |
-| `builder` | general-purpose | Implementation with full rule/skill propagation |
-| `planner` | Plan | Architectural planning with constraint analysis |
-
-Custom agents exist because built-in subagents (Explore, Plan, general-purpose) do **not** inherit CLAUDE.md, rules, or skills. Custom agents carry the full framework via inline rules and the `skills:` frontmatter field.
-
-## Repository Structure
+## Repo layout
 
 ```
 ~/.dotfiles/
-├── dot.ps1                    # CLI tool (PowerShell)
-├── dot.cmd                    # Batch wrapper for cmd.exe
-├── home/                      # Symlinked to ~ via dot stow
-│   ├── .claude/
-│   │   ├── CLAUDE.md          # Global instructions
-│   │   ├── settings.json      # Claude Code settings
-│   │   ├── agents/            # Custom subagents
-│   │   │   ├── builder.md
-│   │   │   ├── planner.md
-│   │   │   └── researcher.md
-│   │   ├── rules/             # Operational mandates
-│   │   │   ├── epistemic-discipline.md
-│   │   │   ├── execution-autonomy.md
-│   │   │   ├── learning-notes.md
-│   │   │   ├── prior-art.md
-│   │   │   ├── root-cause.md
-│   │   │   ├── source-hierarchy.md
-│   │   │   └── tool-mitigations.md
-│   │   ├── skills/            # Domain protocols
-│   │   │   ├── code-review/
-│   │   │   ├── debugging/
-│   │   │   ├── planning/
-│   │   │   ├── project-init/
-│   │   │   ├── refactoring/
-│   │   │   ├── research/
-│   │   │   ├── session-guard/
-│   │   │   ├── skill-sweep/
-│   │   │   └── tdd/
-│   │   └── commands/
-│   │       └── dot.md         # /dot slash command
-│   ├── .config/
-│   │   ├── git/               # Git config + ignore
-│   │   ├── jj/                # Jujutsu config + hooks
-│   │   ├── nvim/              # Neovim (Lua, plugins, LSP)
-│   │   ├── powershell/        # PowerShell profile
-│   │   ├── ripgrep/           # ripgrep defaults
-│   │   ├── windows-terminal/  # Terminal settings
-│   │   └── starship.toml      # Prompt config
-│   └── .ideavimrc             # JetBrains Vim config
-├── packages/
-│   ├── packages.json          # Base packages (winget/scoop)
-│   └── packages.work.json     # Work-specific packages
-├── scripts/                   # Helper scripts (settings, fonts, claude)
-├── backups/                   # Configuration snapshots
-└── docs/                      # Architecture docs
+├── dot.ps1                # The CLI
+├── home/                  # Everything here gets symlinked to ~
+│   ├── .claude/           # Claude Code config
+│   │   ├── CLAUDE.md      #   Identity and operating principles
+│   │   ├── settings.json  #   Permissions, env vars, MCP servers
+│   │   ├── rules/         #   7 operational constraints
+│   │   ├── skills/        #   9 domain protocols
+│   │   ├── agents/        #   3 custom subagents
+│   │   └── commands/      #   /dot slash command
+│   └── .config/           # Tool configs
+│       ├── git/           #   Git identity + conditional work config
+│       ├── nvim/          #   Neovim (Lua, 80+ files)
+│       ├── powershell/    #   Shell profile + aliases
+│       ├── starship.toml  #   Prompt
+│       └── ...            #   ripgrep, windows-terminal, jj
+├── packages/              # What to install (JSON manifests)
+├── scripts/               # Bootstrap helpers
+└── docs/                  # Architecture notes
 ```
 
-## CLI Reference
+## How it works
 
-### Setup
+`dot stow` creates symlinks from `home/` into your home directory. When you edit `~/.claude/CLAUDE.md`, you're actually editing `~/.dotfiles/home/.claude/CLAUDE.md`. Your changes show up in `git diff`, and `git pull` + `dot stow` keeps everything in sync.
 
-```powershell
-dot init                  # Full setup (packages, symlinks, SSH, fonts, PATH)
-dot init --skip-packages  # Skip package installation
-dot init --skip-ssh       # Skip SSH key generation
-dot init --skip-font      # Skip font installation
-```
+## Forking this
 
-### Maintenance
+If you want to use this as a starting point:
 
-```powershell
-dot update          # Pull latest, re-stow, upgrade packages
-dot doctor          # Health check diagnostics
-dot stow            # Create/update symlinks
-dot stow --force    # Overwrite conflicts
-dot unstow          # Remove managed symlinks
-dot edit            # Open dotfiles in $EDITOR
-```
+1. **Change the identity.** Edit `home/.claude/CLAUDE.md` — the identity section defines how Claude behaves. Make it yours.
+2. **Set your git info.** Edit `home/.config/git/config` with your name and email.
+3. **Pick your packages.** Edit `packages/packages.json` — add or remove whatever you want.
+4. **Add skills.** Drop a `SKILL.md` into `home/.claude/skills/your-skill/` and Claude Code picks it up automatically.
+5. **Edit rules.** Each file in `home/.claude/rules/` is self-contained. Change what you disagree with, delete what you don't need.
 
-### Packages
-
-```powershell
-dot package list              # Show all packages and status
-dot package install           # Install from manifest
-dot package add Git.Git       # Add + install a package
-dot package remove Git.Git    # Remove from manifest
-dot package update            # Upgrade all packages
-dot check-packages            # Check installed vs manifest
-dot retry-failed              # Retry failed installs
-```
-
-### Backup & Restore
-
-```powershell
-dot backup                # Create timestamped backup
-dot backup my-snapshot    # Create named backup
-dot backup list           # List available backups
-dot backup clean          # Remove backups older than 30 days
-dot restore my-snapshot   # Restore from backup
-```
-
-### Utilities
-
-```powershell
-dot link              # Add dotfiles to PATH
-dot unlink            # Remove from PATH
-dot gen-ssh-key       # Generate SSH key
-dot summary           # AI summary of recent commits
-dot benchmark-shell   # Measure PowerShell startup time
-dot settings          # Apply Windows settings
-dot fonts             # Install development fonts
-dot claude            # Setup Claude Code
-```
-
-## Customization
-
-### For friends forking this repo
-
-1. **Identity**: Edit `home/.claude/CLAUDE.md` — change the identity section to your own preferences
-2. **Git**: Edit `home/.config/git/config` — set your name and email
-3. **Packages**: Edit `packages/packages.json` — add/remove tools
-4. **Skills**: Add `home/.claude/skills/your-skill/SKILL.md` — Claude Code picks them up automatically
-5. **Rules**: Edit files in `home/.claude/rules/` — each rule is self-contained
-
-### File editing workflow
-
-```powershell
-# Always edit in home/, not in your actual home directory
-# Changes in ~ get overwritten by dot stow
-
-dot backup pre-changes        # Safety net
-# Edit files in home/...
-dot stow                      # Apply changes
-dot doctor                    # Verify
-```
+One thing to keep in mind: always edit files in `home/`, not in your actual home directory. `dot stow` overwrites symlink targets with whatever's in `home/`.
 
 ## Prerequisites
 
 - Windows 10/11
-- PowerShell 5.1+ (ships with Windows)
-- Developer Mode enabled (for symlinks without admin)
-- Internet connection (for packages)
-
-## How It Works
-
-`dot stow` creates file-level symlinks from `home/` to `~`. Your home directory points back to the repo — edits to `~/.claude/CLAUDE.md` are actually edits to `~/.dotfiles/home/.claude/CLAUDE.md`. This means `git diff` always shows your changes, and `git pull` + `dot stow` keeps you updated.
-
-`dot init` orchestrates the full setup: Developer Mode check, Windows settings, SSH key generation, font installation, Claude Code setup, git identity verification, backup, package installation, symlink creation, PATH configuration, and health diagnostics.
+- PowerShell 5.1+ (comes with Windows)
+- Developer Mode enabled
+- Internet connection for package installation
 
 ## Troubleshooting
 
-**`dot: command not found`**
+**`dot: command not found`** — Run `.\dot.ps1 link` from the repo directory.
 
-```powershell
-cd $env:USERPROFILE\.dotfiles
-.\dot.ps1 link
-```
+**Symlink permission denied** — Enable Developer Mode: Settings > Privacy & Security > For Developers > Developer Mode: ON
 
-**Symlink permission denied**
+**Package install fails** — Run `dot check-packages` to see what's missing, `dot retry-failed` to retry, or install manually with `winget install Package.Name`.
 
-Enable Developer Mode: Settings > Privacy & Security > For Developers > Developer Mode: ON
+**Claude Code not picking up config** — Run `dot stow` to make sure symlinks exist, then `dot doctor` to check.
 
-**Package installation fails**
+## Credit
 
-```powershell
-dot check-packages    # See what's missing
-dot retry-failed      # Retry failures
-winget install Package.Name  # Manual fallback
-```
-
-**Claude Code not picking up config**
-
-```powershell
-dot stow              # Ensure symlinks exist
-dot doctor            # Check Claude Code section
-```
-
-## Acknowledgments
-
-- [dmmulroy/.dotfiles](https://github.com/dmmulroy/.dotfiles) — original inspiration
-- [Anthropic Claude Code](https://docs.anthropic.com/en/docs/claude-code) — AI-powered development
+Started from [dmmulroy's dotfiles](https://github.com/dmmulroy/.dotfiles) and went sideways from there.
