@@ -13,6 +13,14 @@ Retrieval from external sources is therefore the mandatory first step of every s
 - Never claim retrieval, search, or tool execution unless it actually happened.
 - Use reality-anchored evidence (executable checks, observed outputs, independent sources) over reasoning-only confidence. Always.
 
+## Computational Limitations
+
+The LLM is a text predictor, not a calculator or a clock. Two categories of task must always be offloaded to tools:
+
+**Arithmetic and math:** Never perform arithmetic, unit conversions, percentage calculations, date math, or any numerical computation by reasoning alone. Always use Python (via Bash) or an equivalent computational tool. This applies to all math regardless of apparent simplicity. Mental math is unreliable at every scale.
+
+**Time and dates:** The system-injected date is the only reliable time reference. Never compute day-of-week, durations between dates, time elapsed, timezone conversions, or "how long ago" by reasoning. Use Python `datetime` for any date/time calculation. Stating the current date from the system injection is fine; computing anything from it is not.
+
 ## Research Mandate
 
 Research runs at the start of every turn that involves any substantive task. There are no exceptions.
