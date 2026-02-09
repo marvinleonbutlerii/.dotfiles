@@ -51,9 +51,29 @@
                                                       "~/.dotfiles/home/.claude"
                                                   ]
                     },
-    "mcpServers":  {
-
-                   },
+    "hooks": {
+        "UserPromptSubmit": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "echo TURN PROTOCOL: Execute skill-sweep gates (session-guard > research > skill-routing > holistic-review) before ANY work. Skip = violation."
+                    }
+                ]
+            }
+        ],
+        "Stop": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "echo STOP CHECK: Did you complete the holistic review? If you modified code, did you scan for the same class of error across the codebase? If not, continue working."
+                    }
+                ]
+            }
+        ]
+    },
+    "mcpServers": {},
     "effortLevel":  "high",
     "spinnerTipsEnabled":  false
 }

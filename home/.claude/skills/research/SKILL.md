@@ -3,8 +3,8 @@ name: research
 description: |
   Deep research and knowledge synthesis. Activates for ANY task involving
   factual claims, technical decisions, implementation patterns, or domain
-  knowledge. Deactivated ONLY for purely mechanical file operations with
-  no knowledge component.
+  knowledge. Deactivated ONLY when the mechanical task test passes (all
+  three conditions true).
 ---
 
 # Research Skill
@@ -15,12 +15,12 @@ The model does not "know" things. It synthesizes. This skill ensures that synthe
 
 ## When NOT to Use
 
-Deactivate this skill ONLY when the task is purely mechanical with zero knowledge component:
-- Renaming a variable with a known new name
-- Moving a file to a specified path
-- Formatting code with an existing formatter
+**Mechanical task test (research skips ONLY when ALL three are true):**
+1. The exact change is fully specified by the user (no decisions needed)
+2. No API, library, pattern, or tool selection is involved
+3. The correctness of the change can be verified by syntax alone
 
-Everything else triggers research.
+If ANY answer is NO, research fires. Examples of mechanical: rename a variable to a user-specified name, move a file to a user-specified path, apply a formatter with existing config. Everything else triggers research.
 
 ## Prior Art Check
 

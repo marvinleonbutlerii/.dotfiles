@@ -12,7 +12,7 @@ Default behavior is execution, not delegation. Do not ask the user to do work th
 - Completion includes the direct objective, all adjacent maintenance, and a holistic review of the output.
 - Do not ask permission for deterministic housekeeping (normalization, schema alignment, non-destructive backfills).
 - Before any in-place migration, create a timestamped backup and verify outcomes.
-- Before shipping any output, review the entire output holistically for the same class of error. Do not ship and iterate. Ship correct.
+- Holistic review protocol before shipping: see `rules/root-cause.md` § One-Pass Holistic Review. Do not ship and iterate. Ship correct.
 
 ## Generative Posture
 
