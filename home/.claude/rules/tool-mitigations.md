@@ -25,8 +25,8 @@ This registry grows: every new tool failure discovered during any session MUST b
 ### Bash — Minimal Environment
 - **Trigger:** `command not found` for basic Unix utils (tr, head, which, type, less, etc.)
 - **Root cause:** Claude Code's Bash is Git Bash with a stripped `/usr/bin`. Many standard Unix utilities are absent.
-- **Mitigation:** Use full paths from `/c/Tools/Git/usr/bin/` for utilities that exist there, or use PowerShell via `"/c/WINDOWS/System32/WindowsPowerShell/v1.0/powershell.exe" -NoProfile -Command "..."` for operations requiring richer shell capabilities.
-- **Status:** By design (Git Bash limitation)
+- **Mitigation:** SessionStart hook (`hooks/session-env.sh`) prepends `/c/Tools/Git/usr/bin` to PATH via `CLAUDE_ENV_FILE`. Standard utils (cat, tr, head, tail, sort, wc, etc.) now resolve by name. Fallback: use full paths or PowerShell.
+- **Status:** Fixed via SessionStart hook (2026-02-08). Requires new session to activate.
 - **Added:** 2026-02-08
 
 ### Bash — cygpath Not Resolvable by Bare Name
