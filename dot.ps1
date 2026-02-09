@@ -1112,7 +1112,17 @@ function Initialize-Dotfiles {
     }
 
     Write-Status "Git configuration verified" -Type Success
-    
+
+    # Install git hooks
+    $hooksSource = Join-Path $DotfilesRoot "scripts\hooks"
+    $hooksDest = Join-Path $DotfilesRoot ".git\hooks"
+    if (Test-Path $hooksSource) {
+        Get-ChildItem $hooksSource -File | ForEach-Object {
+            Copy-Item $_.FullName (Join-Path $hooksDest $_.Name) -Force
+        }
+        Write-Status "Git hooks installed" -Type Success
+    }
+
     # Create backup first
     Write-Status "Creating pre-init backup..." -Type Info
     New-Backup -Name "pre-init-$(Get-Date -Format 'yyyyMMdd')" | Out-Null
