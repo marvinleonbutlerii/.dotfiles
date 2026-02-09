@@ -1,27 +1,43 @@
 # .dotfiles
 
-My Windows dev environment. One command installs everything, symlinks all configs, and sets up Claude Code with a custom agent framework that actually makes it useful.
+A Claude Code config that fixes the things that actually drive people crazy: sycophancy, error-chasing loops, hallucinated APIs, subagents that forget everything, and instructions that get read but not followed. Also sets up a full Windows dev environment, but that's not why you're here.
 
-## Why this exists
+## What this fixes
 
-Claude Code's default agents are amnesiacs. When Claude spawns a subagent (Explore, Plan, general-purpose), that subagent gets *nothing*. No CLAUDE.md. No rules. No skills. It starts from a blank prompt every time. So all the effort you put into configuring Claude's behavior? Gone the moment it delegates work.
+**Claude agrees with everything you say, even when you're wrong.** The CLAUDE.md identity rules ban performative agreement ("You're right!", "Great point!"), emotional mirroring, and hedging. Claude states what is true. If you're wrong, it says so.
 
-I fixed that. This repo includes three custom agents that replace the built-ins and carry the full config with them — rules, skills, everything. The subagents work the same way the main agent does. That's the whole point.
+**Claude guesses instead of looking things up.** The research skill and epistemic discipline rule force Claude to search external sources before answering any factual or technical question. Training data is treated as unverified hypothesis, not knowledge. Every claim gets labeled: verified, inferred, or unknown.
 
-It also sets up my full Windows dev environment in one command (`dot init` — packages, symlinks, SSH keys, fonts, PATH, the works), but the Claude Code config is the reason you're here.
+**Claude chases errors one at a time instead of finding the root cause.** The debugging skill and root-cause rule prohibit sequential error-chasing. Claude reads the full error landscape before touching anything, identifies the deepest architectural cause, and fixes it in one pass. Then it scans the rest of the codebase for the same class of mistake.
 
-## What's in the box
+**Claude's subagents start from a blank prompt every time.** Built-in subagents (Explore, Plan, general-purpose) don't inherit CLAUDE.md, rules, or skills. Three custom agents (researcher, builder, planner) replace them and carry the full config through inline rules and the `skills:` frontmatter field.
 
-**Dev environment:** PowerShell profile with aliases, starship prompt, git with delta diffs and conditional work identity, Neovim (Lua-based, 80+ plugin configs, LSP, Telescope, Treesitter, Harpoon), Windows Terminal, ripgrep, Jujutsu, and about 19 packages installed via winget. Everything lives in `home/` and gets symlinked to `~`.
+**CLAUDE.md instructions get read but not followed.** Rules are written as hard constraints, not suggestions. Each rule lives in one file and covers one concept. Skills activate based on task type and enforce specific protocols (debugging, TDD, code review, research) instead of leaving Claude to improvise.
 
-**Claude Code config:** This is the part I spent the most time on. It's a layered system:
+**Claude's output reads like AI slop.** The communication rules ban specific detectable patterns: em dashes, sycophantic openers, uniform sentence length, parallel triads, filler transitions, banned vocabulary (delve, comprehensive, robust, leverage, seamless), sign-off summaries, and throat-clearing introductions.
 
-- **CLAUDE.md** gives the agent an identity and a set of operating principles. Mine is configured to research before acting, never present training data as knowledge, and find a better path when the requested one has problems. You'd change this to match how you want Claude to work.
-- **Rules** (7 files) are hard constraints. Things like "always do root-cause analysis, never chase symptoms" and "survey existing solutions before building from scratch." Each rule covers one concept and lives in one file.
-- **Skills** (9) are domain protocols that activate based on what you're doing. When Claude hits a bug, the debugging skill kicks in and enforces a specific investigation protocol instead of letting it guess-and-check. When it needs to research something, the research skill forces it through source evaluation and claim labeling. TDD, code review, planning, refactoring — each one has a defined workflow.
-- **Agents** (3) are the custom subagents. Researcher replaces Explore, builder replaces general-purpose, planner replaces Plan. They embed the rules inline and load skills via frontmatter so the full framework propagates to every subprocess.
+## What's in the config
 
-The difference is real. Without this, Claude guesses at answers, skips research, chases error messages one by one, and forgets everything when it spawns a subagent. With it, Claude looks things up before answering, tells you when it's unsure, fixes root causes instead of symptoms, and the subagents behave the same way.
+The Claude Code config lives in `home/.claude/` and gets symlinked to `~/.claude/`.
+
+**CLAUDE.md** sets the identity and operating principles. It controls how Claude communicates, what it's allowed to assume, and when it must research before acting.
+
+**Rules** (7 files in `rules/`) are hard constraints. One concept per file:
+- `epistemic-discipline.md` forces research before answering, labels all claims by confidence level
+- `source-hierarchy.md` ranks sources in four tiers and defines what counts as evidence
+- `execution-autonomy.md` makes Claude execute instead of asking permission for obvious next steps
+- `root-cause.md` bans error-chasing, requires one-pass holistic review
+- `prior-art.md` requires surveying existing solutions before building anything
+- `tool-mitigations.md` is a self-healing registry of known tool failures and workarounds
+- `learning-notes.md` generates post-completion documentation
+
+**Skills** (9 in `skills/`) are domain protocols that activate based on task type. The debugging skill enforces a specific investigation sequence. The research skill forces source evaluation. TDD enforces Red-Green-Refactor. Code review, planning, refactoring, project-init, and session-guard each have defined workflows.
+
+**Agents** (3 in `agents/`) replace Claude Code's built-in subagents. Researcher replaces Explore. Builder replaces general-purpose. Planner replaces Plan. Each one embeds rules inline and loads skills via frontmatter, so every subprocess operates under the same discipline.
+
+## Dev environment
+
+Also included: PowerShell profile with aliases, starship prompt, git with delta diffs and conditional work identity, Neovim (Lua-based, 80+ plugin configs), Windows Terminal, ripgrep, Jujutsu, and 19 packages installed via winget. Everything in `home/` gets symlinked to `~`.
 
 ## Quick start
 
@@ -95,19 +111,17 @@ dot retry-failed               # Retry failed installs
 
 ## How it works
 
-`dot stow` creates symlinks from `home/` into your home directory. When you edit `~/.claude/CLAUDE.md`, you're actually editing `~/.dotfiles/home/.claude/CLAUDE.md`. Your changes show up in `git diff`, and `git pull` + `dot stow` keeps everything in sync.
+`dot stow` creates symlinks from `home/` into your home directory. When you edit `~/.claude/CLAUDE.md`, you're actually editing `~/.dotfiles/home/.claude/CLAUDE.md`. Changes show up in `git diff`. `git pull` + `dot stow` keeps everything in sync.
 
 ## Forking this
 
-If you want to use this as a starting point:
-
-1. **Change the identity.** Edit `home/.claude/CLAUDE.md` — the identity section defines how Claude behaves. Make it yours.
+1. **Change the identity.** Edit `home/.claude/CLAUDE.md`. The identity section defines how Claude communicates and operates.
 2. **Set your git info.** Edit `home/.config/git/config` with your name and email.
-3. **Pick your packages.** Edit `packages/packages.json` — add or remove whatever you want.
+3. **Pick your packages.** Edit `packages/packages.json`.
 4. **Add skills.** Drop a `SKILL.md` into `home/.claude/skills/your-skill/` and Claude Code picks it up automatically.
 5. **Edit rules.** Each file in `home/.claude/rules/` is self-contained. Change what you disagree with, delete what you don't need.
 
-One thing to keep in mind: always edit files in `home/`, not in your actual home directory. `dot stow` overwrites symlink targets with whatever's in `home/`.
+Always edit files in `home/`, not in your actual home directory. `dot stow` overwrites symlink targets.
 
 ## Prerequisites
 
@@ -118,13 +132,13 @@ One thing to keep in mind: always edit files in `home/`, not in your actual home
 
 ## Troubleshooting
 
-**`dot: command not found`** — Run `.\dot.ps1 link` from the repo directory.
+**`dot: command not found`** Run `.\dot.ps1 link` from the repo directory.
 
-**Symlink permission denied** — Enable Developer Mode: Settings > Privacy & Security > For Developers > Developer Mode: ON
+**Symlink permission denied** Enable Developer Mode: Settings > Privacy & Security > For Developers > Developer Mode: ON
 
-**Package install fails** — Run `dot check-packages` to see what's missing, `dot retry-failed` to retry, or install manually with `winget install Package.Name`.
+**Package install fails** Run `dot check-packages` to see what's missing, `dot retry-failed` to retry, or `winget install Package.Name` manually.
 
-**Claude Code not picking up config** — Run `dot stow` to make sure symlinks exist, then `dot doctor` to check.
+**Claude Code not picking up config** Run `dot stow` to make sure symlinks exist, then `dot doctor` to check.
 
 ## Credit
 
