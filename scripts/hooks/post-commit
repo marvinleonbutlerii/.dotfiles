@@ -1,0 +1,49 @@
+#!/bin/sh
+#
+# post-commit hook: after every commit on init-dotfiles,
+# push to origin, merge into main, push main.
+#
+# Only fires on init-dotfiles. Commits directly to main are left alone.
+# Uses a lock variable to prevent recursive triggering from the merge commit.
+
+# Guard against recursion (the merge commit on main would re-trigger this hook)
+if [ -n "$_DOTFILES_POST_COMMIT_RUNNING" ]; then
+    exit 0
+fi
+export _DOTFILES_POST_COMMIT_RUNNING=1
+
+branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+if [ "$branch" != "init-dotfiles" ]; then
+    exit 0
+fi
+
+echo "[post-commit] Pushing init-dotfiles to origin..."
+git push origin init-dotfiles || {
+    echo "[post-commit] ERROR: push init-dotfiles failed. Aborting merge."
+    exit 1
+}
+
+echo "[post-commit] Switching to main and merging init-dotfiles..."
+git checkout main || {
+    echo "[post-commit] ERROR: checkout main failed."
+    exit 1
+}
+
+git merge init-dotfiles -m "Merge branch 'init-dotfiles'" || {
+    echo "[post-commit] ERROR: merge failed. Resolve conflicts manually."
+    git checkout init-dotfiles
+    exit 1
+}
+
+echo "[post-commit] Pushing main to origin..."
+git push origin main || {
+    echo "[post-commit] ERROR: push main failed."
+    git checkout init-dotfiles
+    exit 1
+}
+
+echo "[post-commit] Switching back to init-dotfiles..."
+git checkout init-dotfiles
+
+echo "[post-commit] Done. init-dotfiles pushed, merged to main, main pushed."
