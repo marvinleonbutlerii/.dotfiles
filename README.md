@@ -1,6 +1,6 @@
 # Dotfiles
 
-A Windows dotfiles system with deep Claude Code integration. One command sets up your entire development environment — including a modular AI agent configuration with custom rules, skills, and subagents.
+A Windows dotfiles system with deep Claude Code integration. One command sets up your entire development environment, including a modular AI agent configuration with custom rules, skills, and subagents.
 
 ## Quick Start
 
