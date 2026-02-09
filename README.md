@@ -4,28 +4,28 @@ A Claude Code config that fixes the things that actually drive people crazy: syc
 
 ## What this fixes
 
-**Claude agrees with everything you say, even when you're wrong.** The CLAUDE.md identity rules ban performative agreement ("You're right!", "Great point!"), emotional mirroring, and hedging. Claude states what is true. If you're wrong, it says so.
+**Claude agrees with everything you say, even when you're wrong.** Lilith bans performative agreement ("You're right!", "Great point!"), emotional mirroring, and hedging. Lilith states what is true. If you're wrong, it says so.
 
-**Claude guesses instead of looking things up.** The research skill and epistemic discipline rule force Claude to search external sources before answering any factual or technical question. Training data is treated as unverified hypothesis, not knowledge. Every claim gets labeled: verified, inferred, or unknown.
+**Claude guesses instead of looking things up.** The research skill and epistemic discipline rule force Lilith to search external sources before answering any factual or technical question. Training data is treated as unverified hypothesis, not knowledge. Every claim gets labeled: verified, inferred, or unknown.
 
-**Claude chases errors one at a time instead of finding the root cause.** The debugging skill and root-cause rule prohibit sequential error-chasing. Claude reads the full error landscape before touching anything, identifies the deepest architectural cause, and fixes it in one pass. Then it scans the rest of the codebase for the same class of mistake.
+**Claude chases errors one at a time instead of finding the root cause.** The debugging skill and root-cause rule prohibit sequential error-chasing. Lilith reads the full error landscape before touching anything, identifies the deepest architectural cause, and fixes it in one pass. Then it scans the rest of the codebase for the same class of mistake.
 
-**Claude's subagents start from a blank prompt every time.** Built-in subagents (Explore, Plan, general-purpose) don't inherit CLAUDE.md, rules, or skills. Three custom agents (researcher, builder, planner) replace them and carry the full config through inline rules and the `skills:` frontmatter field.
+**Claude Code's subagents start from a blank prompt every time.** Built-in subagents (Explore, Plan, general-purpose) don't inherit CLAUDE.md, rules, or skills. Three custom agents (researcher, builder, planner) replace them and carry the full config through inline rules and the `skills:` frontmatter field.
 
-**CLAUDE.md instructions get read but not followed.** Rules are written as hard constraints, not suggestions. Each rule lives in one file and covers one concept. Skills activate based on task type and enforce specific protocols (debugging, TDD, code review, research) instead of leaving Claude to improvise.
+**CLAUDE.md instructions get read but not followed.** Rules are written as hard constraints, not suggestions. Each rule lives in one file and covers one concept. Skills activate based on task type and enforce specific protocols (debugging, TDD, code review, research) instead of leaving Lilith to improvise.
 
-**Claude's output reads like AI slop.** The communication rules ban specific detectable patterns: em dashes, sycophantic openers, uniform sentence length, parallel triads, filler transitions, banned vocabulary (delve, comprehensive, robust, leverage, seamless), sign-off summaries, and throat-clearing introductions.
+**Claude Code's output reads like AI slop.** The communication rules ban specific detectable patterns: em dashes, sycophantic openers, uniform sentence length, parallel triads, filler transitions, banned vocabulary (delve, comprehensive, robust, leverage, seamless), sign-off summaries, and throat-clearing introductions.
 
 ## What's in the config
 
 The Claude Code config lives in `home/.claude/` and gets symlinked to `~/.claude/`.
 
-**CLAUDE.md** sets the identity and operating principles. It controls how Claude communicates, what it's allowed to assume, and when it must research before acting.
+**CLAUDE.md** sets the identity and operating principles. It controls how Lilith communicates, what it's allowed to assume, and when it must research before acting.
 
 **Rules** (7 files in `rules/`) are hard constraints. One concept per file:
 - `epistemic-discipline.md` forces research before answering, labels all claims by confidence level
 - `source-hierarchy.md` ranks sources in four tiers and defines what counts as evidence
-- `execution-autonomy.md` makes Claude execute instead of asking permission for obvious next steps
+- `execution-autonomy.md` makes Lilith execute instead of asking permission for obvious next steps
 - `root-cause.md` bans error-chasing, requires one-pass holistic review
 - `prior-art.md` requires surveying existing solutions before building anything
 - `tool-mitigations.md` is a self-healing registry of known tool failures and workarounds
@@ -115,7 +115,7 @@ dot retry-failed               # Retry failed installs
 
 ## Forking this
 
-1. **Change the identity.** Edit `home/.claude/CLAUDE.md`. The identity section defines how Claude communicates and operates.
+1. **Change the identity.** Edit `home/.claude/CLAUDE.md`. The identity section defines how Lilith communicates and operates.
 2. **Set your git info.** Edit `home/.config/git/config` with your name and email.
 3. **Pick your packages.** Edit `packages/packages.json`.
 4. **Add skills.** Drop a `SKILL.md` into `home/.claude/skills/your-skill/` and Claude Code picks it up automatically.
